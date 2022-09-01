@@ -1,33 +1,30 @@
 import { useRef } from "react";
 import { useLazyGetUserByLoginQuery } from "./api";
+import NewRepository from "./examples/NewRepository";
+import Repositories from "./examples/Repositories";
+import SingleRepository from "./examples/SingleRepository";
 
 export default function App() {
-
-  const inputRef = useRef<any>(null);
-
-  const [trigger, { data, isLoading, isError }] = useLazyGetUserByLoginQuery();
-
-  function handleFetchData() {
-    trigger(inputRef?.current.value);
-  }
-
   return (
     <>
       <h1>Redux Toolkit + GraphQl</h1>
-      <input placeholder="insert id here" ref={inputRef}></input>
-      <button onClick={handleFetchData}>get user</button>
 
-      {isLoading && <h1>Loading ⌛</h1>}
-      {isError && <h1>Error ⚠️</h1>}
+      <div style={{ display: "flex", gap: "10px", flexWrap: 'wrap' }}>
+        <div className="border">
+          <h2>First example - lazy query</h2>
+          <SingleRepository />
+        </div>
 
-      {data && (
-        <>
-          <p>{data?.name}</p>
-          <p>{data?.bio}</p>
-          <p>{data?.createdAt}</p>
-          <p>{data?.id}</p>
-        </>
-      )}
+        <div className="border">
+          <h2>Second example - non lazy query</h2>
+          <Repositories />
+        </div>
+
+        <div className="border">
+          <h2>Third example - mutation</h2>
+          <NewRepository />
+        </div>
+      </div>
     </>
   );
 }

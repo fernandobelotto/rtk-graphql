@@ -9,3 +9,18 @@ export type User = {
 export type UserResponse = {
   user: User;
 };
+
+export type Repository = {
+  url: string;
+  name: string;
+  id: string;
+};
+
+
+export type GetRepositoriesResponse = {
+  user: {
+    repositories: {
+      nodes: Repository[]
+    }
+  }
+}

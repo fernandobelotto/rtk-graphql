@@ -1,8 +1,12 @@
 import { createApi } from "@reduxjs/toolkit/dist/query/react";
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
 import { gql } from "graphql-request";
-import { User, UserResponse } from "./types";
-
+import {
+  GetRepositoriesResponse,
+  Repository,
+  User,
+  UserResponse,
+} from "./types";
 
 export const graphqlApi = createApi({
   baseQuery: graphqlRequestBaseQuery({
@@ -31,7 +35,49 @@ export const graphqlApi = createApi({
       }),
       transformResponse: (response: UserResponse) => response.user,
     }),
+
+    getRepositories: builder.query<Repository[], { first?: number }>({
+      query: ({ first }) => ({
+        document: gql`
+          query GetRepositories($first: Int = 10) {
+            user(login: "fernandobelotto") {
+              repositories(first: $first) {
+                nodes {
+                  id
+                  name
+                  url
+                }
+              }
+            }
+          }
+        `,
+        variables: {
+          first,
+        },
+      }),
+      transformResponse: (response: GetRepositoriesResponse) =>
+        response.user.repositories.nodes,
+    }),
+
+    createRepository: builder.mutation({
+      query: (name) => ({
+        document: gql`
+          mutation CreateNewRepository($name: String!) {
+            createRepository(input: { name: $name, visibility: PUBLIC }) {
+              repository {
+                name,
+                visibility
+              }
+            }
+          }
+        `,
+        variables: {
+          name,
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetUserByLoginQuery, useLazyGetUserByLoginQuery } = graphqlApi;
+export const { useCreateRepositoryMutation , useLazyGetUserByLoginQuery, useGetRepositoriesQuery } =
+  graphqlApi;
