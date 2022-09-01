@@ -1,0 +1,16 @@
+query MyQuery {
+    user(login: "fernandobelotto") {
+      id
+      repositories(first: 10) {
+        edges {
+          node {
+            id
+            name
+            homepageUrl
+            description
+            url
+          }
+        }
+      }
+    }
+  }
